@@ -14,9 +14,11 @@ contract NdpVouchers is Counter, Enums {
     }
     mapping(address => Vouchers) voucherBalances;
     GSGD voucherVault;
+    MerchantsList merchantsList;
 
-    constructor (address GSDAddress, uint _limit) Counter(_limit) {
+    constructor (address GSDAddress, address merchantsListAddress, uint _limit) Counter(_limit) {
         voucherVault = GSGD(GSDAddress);
+        merchantsList = MerchantsList(merchantsListAddress);
     }
 
     // TODO: owneronly or get user to trigger?
@@ -28,18 +30,24 @@ contract NdpVouchers is Counter, Enums {
 
     function use2Voucher (address merchantAddress) internal {
         require(voucherBalances[msg.sender].twos > 0);
+        merchantsList._requireMerchantExists(merchantAddress);
+
         voucherVault.issueToMerchant(merchantAddress, Denominations.TWO);
         voucherBalances[msg.sender].twos--;
     }
 
     function use5Voucher (address merchantAddress) internal {
         require(voucherBalances[msg.sender].fives > 0);
+        merchantsList._requireMerchantExists(merchantAddress);
+
         voucherVault.issueToMerchant(merchantAddress, Denominations.FIVE);
         voucherBalances[msg.sender].fives--;
     }
 
     function use10Voucher (address merchantAddress) internal {
         require(voucherBalances[msg.sender].tens > 0);
+        merchantsList._requireMerchantExists(merchantAddress);
+    
         voucherVault.issueToMerchant(merchantAddress, Denominations.TEN);
         voucherBalances[msg.sender].tens--;
     }

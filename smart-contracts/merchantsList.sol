@@ -14,7 +14,11 @@ contract MerchantsList is Ownable {
         merchantMap[merchantAddress] = Merchant(name, true);
     }
 
-    function merchantExists (address _address) public view returns(bool) {
+    function merchantExists (address _address) internal view returns(bool) {
         return merchantMap[_address].onboarded;
+    }
+
+    function _requireMerchantExists (address _address) external view {
+        require(merchantExists(_address), "MerchantsList: Merchant does not exist");
     }
 }
