@@ -19,7 +19,7 @@ contract GSGD is ERC20, ERC20Burnable, Ownable, Enums {
         return 0;
     }
 
-    function issueToMerchant(address merchantAddress, Denominations amount) external onlyOwner {
+    function issueToMerchant(address merchantAddress, Denominations amount) external {
         _mint(merchantAddress, valueMap[amount]);
     }
 

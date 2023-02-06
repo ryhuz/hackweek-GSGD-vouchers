@@ -12,13 +12,18 @@ contract NdpVouchers is Counter, Enums {
         uint fives;
         uint tens;
     }
-    mapping(address => Vouchers) voucherBalances;
+    mapping(address => Vouchers) public voucherBalances;
     GSGD voucherVault;
     MerchantsList merchantsList;
 
     constructor (address GSDAddress, address merchantsListAddress, uint _limit) Counter(_limit) {
         voucherVault = GSGD(GSDAddress);
         merchantsList = MerchantsList(merchantsListAddress);
+    }
+
+    modifier whenMerchantExists (address merchantAddress) {
+        require(merchantsList.merchantExists(merchantAddress), "MerchantsList: Merchant does not exist");
+        _;
     }
 
     // TODO: owneronly or get user to trigger?
@@ -28,25 +33,22 @@ contract NdpVouchers is Counter, Enums {
         _increment();
     }
 
-    function use2Voucher (address merchantAddress) internal {
+    function use2Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].twos > 0);
-        merchantsList._requireMerchantExists(merchantAddress);
 
         voucherVault.issueToMerchant(merchantAddress, Denominations.TWO);
         voucherBalances[msg.sender].twos--;
     }
 
-    function use5Voucher (address merchantAddress) internal {
+    function use5Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].fives > 0);
-        merchantsList._requireMerchantExists(merchantAddress);
 
         voucherVault.issueToMerchant(merchantAddress, Denominations.FIVE);
         voucherBalances[msg.sender].fives--;
     }
 
-    function use10Voucher (address merchantAddress) internal {
+    function use10Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].tens > 0);
-        merchantsList._requireMerchantExists(merchantAddress);
     
         voucherVault.issueToMerchant(merchantAddress, Denominations.TEN);
         voucherBalances[msg.sender].tens--;
