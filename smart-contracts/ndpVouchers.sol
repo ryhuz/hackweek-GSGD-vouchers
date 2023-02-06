@@ -6,7 +6,7 @@ import "./GSGD.sol";
 import "./utils/counter.sol";
 import "./utils/enums.sol";
 
-contract NdpVouchers is Counter, Enums {
+contract NdpVouchers is Counter {
     struct Vouchers {
         uint twos;
         uint fives;
@@ -36,21 +36,21 @@ contract NdpVouchers is Counter, Enums {
     function use2Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].twos > 0);
 
-        voucherVault.issueToMerchant(merchantAddress, Denominations.TWO);
+        voucherVault.issueToMerchant(merchantAddress, Enums.Denominations.TWO);
         voucherBalances[msg.sender].twos--;
     }
 
     function use5Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].fives > 0);
 
-        voucherVault.issueToMerchant(merchantAddress, Denominations.FIVE);
+        voucherVault.issueToMerchant(merchantAddress, Enums.Denominations.FIVE);
         voucherBalances[msg.sender].fives--;
     }
 
     function use10Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].tens > 0);
     
-        voucherVault.issueToMerchant(merchantAddress, Denominations.TEN);
+        voucherVault.issueToMerchant(merchantAddress, Enums.Denominations.TEN);
         voucherBalances[msg.sender].tens--;
     }
 }

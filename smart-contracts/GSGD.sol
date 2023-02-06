@@ -6,20 +6,20 @@ import "./node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burna
 import "./node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./utils/enums.sol";
 
-contract GSGD is ERC20, ERC20Burnable, Ownable, Enums {
+contract GSGD is ERC20, ERC20Burnable, Ownable {
     uint totalRedeemed = 0;
-    mapping (Denominations => uint) valueMap;
+    mapping (Enums.Denominations => uint) valueMap;
     constructor() ERC20("GSGD", "GSGD") {
-        valueMap[Denominations.TWO] = 2;
-        valueMap[Denominations.FIVE] = 5;
-        valueMap[Denominations.TEN] = 10;
+        valueMap[Enums.Denominations.TWO] = 2;
+        valueMap[Enums.Denominations.FIVE] = 5;
+        valueMap[Enums.Denominations.TEN] = 10;
     }
 
     function decimals() pure public override returns(uint8) {
         return 0;
     }
 
-    function issueToMerchant(address merchantAddress, Denominations amount) external {
+    function issueToMerchant(address merchantAddress, Enums.Denominations amount) external {
         _mint(merchantAddress, valueMap[amount]);
     }
 
