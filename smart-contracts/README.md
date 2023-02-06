@@ -23,3 +23,8 @@
 3. Merchant Redemption
     - Merchant will exchange GSD to cash from authorised outlets (\*)
     - Merchant's full amount of GSGD will be burnt
+
+## Start local Ganache network
+- npm run ganache
+- on remix, set environment to Ganache provider on port 8545
+- ganache will start listening to events

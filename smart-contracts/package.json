@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "ganache": "ganache --wallet.seed myCustomSeed -e 100"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.1"
   }
