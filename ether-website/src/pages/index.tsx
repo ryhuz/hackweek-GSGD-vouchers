@@ -1,8 +1,7 @@
 import React from "react";
-import { etherHelper } from "../ether";
 
 function HomePage(): JSX.Element {
-  const walletAddress = etherHelper.getWalletAddress();
+  const walletAddress = "hello world";
   return (
     <React.Fragment>
       <h1>GSGD UI</h1>
