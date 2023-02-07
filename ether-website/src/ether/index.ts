@@ -1,21 +1,31 @@
-import { ethers, Wallet } from "ethers";
+import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
 
-class EtherHelper {
-  //ganache account privat key
-  private privateKey = "";
-  private blockChainUrl = "http://0.0.0.0:8545";
+export class EtherHelper {
+  private provider: JsonRpcProvider;
 
-  private wallet: Wallet;
-
-  constructor() {
-    //TODO: take in pk form different accounts
-    const provider = new ethers.JsonRpcProvider(this.blockChainUrl);
-    this.wallet = new ethers.Wallet(this.privateKey, provider);
+  constructor(blockChainUrl?: string) {
+    //currently set to this
+    blockChainUrl = "http://0.0.0.0:8545";
+    this.provider = new ethers.JsonRpcProvider(blockChainUrl);
   }
 
-  public getWalletAddress(): string {
-    return this.wallet.address;
+  public getProvider() {
+    if (this.provider) {
+      return this.provider;
+    }
+    console.log("Provider not provided, please set a provider");
+    return null;
+  }
+
+  public overrideProvider(blockChainUrl: string) {
+    this.provider = new ethers.JsonRpcProvider(blockChainUrl);
+  }
+
+  public getWallet(address: string) {
+    return new Wallet(address, this.provider);
+  }
+
+  public getSmartContract(address: string, abi: ethers.InterfaceAbi) {
+    return new Contract(address, abi);
   }
 }
-
-export const etherHelper = new EtherHelper();
