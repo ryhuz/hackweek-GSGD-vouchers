@@ -4,14 +4,21 @@ import { MerchantHelper } from "../ether/merchant";
 export const MerchantPage = (): JSX.Element => {
   const [state, setState] = useState({
     setMerchant: "",
-    checkMerchant: ""
+    checkMerchant: "",
+    merchantExists: null,
+    mh: null
   })
-  let merchantHelper;
 
   useEffect(() => {
-    merchantHelper = new MerchantHelper("FIXME") //TODO:
+    initMerchantHelper()
   }, []);
 
+  const initMerchantHelper = () => {
+    setState({
+      ...state,
+      mh: new MerchantHelper("FIXME")
+    })
+  }
 
   function handleChange(evt) {
     const value = evt.target.value;
@@ -24,18 +31,21 @@ export const MerchantPage = (): JSX.Element => {
   const handleOnboardMerchant = async (e) => {
     e.preventDefault();
 
-    console.log(`[ handleOnboardMerchant ]`);
-    await merchantHelper.onboardMerchant(state.setMerchant, "test")
+    console.log(`[ handleOnboardMerchant ]`, state.mh);
+    await state.mh.onboardMerchant(state.setMerchant, "test")
     console.log(`[ handleOnboardMerchant ] Done`);
   }
 
   const handleMerchantExists = async (e) => {
     e.preventDefault();
 
-    console.log(`[ handleMerchantExists ]`);
-    const exists = await merchantHelper.merchantExists(state.checkMerchant)
+    console.log(`[ handleMerchantExists ]`, state.mh);
+    const exists = await state.mh.merchantExists(state.checkMerchant)
     console.log(`[ handleMerchantExists ] Exists?  ${exists}`);
-    return exists;
+    setState({
+      ...state,
+      merchantExists: exists
+    });
   }
 
   return (
@@ -53,6 +63,7 @@ export const MerchantPage = (): JSX.Element => {
           <input type="submit" value="Check" />
         </label>
         <h2> Does merchant exist?</h2>
+        {state.merchantExists ? <>Yes</> : <></>}
       </form>
     </React.Fragment>
   );
