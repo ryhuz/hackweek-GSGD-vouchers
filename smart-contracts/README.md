@@ -1,10 +1,10 @@
-# NDP Vouchers Smart Contracts
+# NFT Vouchers Smart Contracts
 
 ## Avaiable contracts
 
 -   MerchantsList
 -   GSGD
--   NdpVouchers
+-   NFTVouchers
     -   requires the following parameters:
         -   address of deployed GSGD contract
         -   address of deployed MerchantsList contract
@@ -14,7 +14,7 @@
 
 1. Airdrop
     - User list will be retrieved from NDI (\*)
-    - Users will be issued with NdpVouchers NFT
+    - Users will be issued with NFTVouchers
         - each NFT will have 5x$2, 5x$5, and 5x$10
 2. Usage
     - Check performed to see if merchant is whitelisted

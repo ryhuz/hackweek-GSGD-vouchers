@@ -1,4 +1,4 @@
-# NEXTJS Website to interact with NDP Vouchers Smart Contracts
+# NEXTJS Website to interact with NFT Vouchers Smart Contracts
 
 ## How to start:
 
