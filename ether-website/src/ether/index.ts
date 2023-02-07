@@ -1,12 +1,12 @@
-import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
+import { Contract, ContractInterface, ethers, Wallet } from "ethers";
 
 export class EtherHelper {
-  private provider: JsonRpcProvider;
+  private provider: ethers.providers.JsonRpcProvider;
 
   constructor(blockChainUrl?: string) {
     //currently set to this
     blockChainUrl = "http://0.0.0.0:8545";
-    this.provider = new ethers.JsonRpcProvider(blockChainUrl);
+    this.provider = new ethers.providers.JsonRpcProvider(blockChainUrl);
   }
 
   public getProvider() {
@@ -18,14 +18,22 @@ export class EtherHelper {
   }
 
   public overrideProvider(blockChainUrl: string) {
-    this.provider = new ethers.JsonRpcProvider(blockChainUrl);
+    this.provider = new ethers.providers.JsonRpcProvider(blockChainUrl);
   }
 
   public getWallet(address: string) {
     return new Wallet(address, this.provider);
   }
 
-  public getSmartContract(address: string, abi: ethers.InterfaceAbi) {
-    return new Contract(address, abi);
+  public getSmartContract(address: string, abi: ContractInterface) {
+    return new Contract(address, abi, this.provider);
+  }
+
+  public getProviderConnection() {
+    return this.provider.connection;
+  }
+
+  public async getSigner(address?: string) {
+    return await this.provider.getSigner(address);
   }
 }
