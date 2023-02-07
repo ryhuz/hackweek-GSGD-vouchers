@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.6;
 
+import "./node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./merchantsList.sol";
 import "./GSGD.sol";
 import "./utils/counter.sol";
 import "./utils/enums.sol";
 
-contract NdpVouchers is Counter {
+contract NFTVouchers is ERC721, Counter {
     struct Vouchers {
         uint twos;
         uint fives;
@@ -16,7 +17,7 @@ contract NdpVouchers is Counter {
     GSGD voucherVault;
     MerchantsList merchantsList;
 
-    constructor (address GSDAddress, address merchantsListAddress, uint _limit) Counter(_limit) {
+    constructor (address GSDAddress, address merchantsListAddress, uint _limit) ERC721("NFT Voucher", "NFTV") Counter(_limit) {
         voucherVault = GSGD(GSDAddress);
         merchantsList = MerchantsList(merchantsListAddress);
     }
