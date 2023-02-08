@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MerchantHelper } from "../ether/merchant";
 
-export const MerchantPage = (): JSX.Element => {
+export const AdminPage = (): JSX.Element => {
   const [state, setState] = useState({
     setMerchant: "",
     checkMerchant: "",
@@ -16,7 +16,7 @@ export const MerchantPage = (): JSX.Element => {
   const initMerchantHelper = () => {
     setState({
       ...state,
-      mh: new MerchantHelper("FIXME")
+      mh: new MerchantHelper("0x5b3208286264f409e1873e3709d3138acf47f6cc733e74a6b47a040b50472fd8")
     })
   }
 

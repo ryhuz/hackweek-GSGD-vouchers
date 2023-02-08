@@ -5,8 +5,118 @@ export class CustomerHelper {
   private wallet: Wallet;
   private etherHelper = new EtherHelper();
 
-  private abi: string =
-    '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_address","type":"address"}],"name":"_requireMerchantExists","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"merchantAddress","type":"address"},{"internalType":"string","name":"name","type":"string"}],"name":"onboardMerchant","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]';
+  private abi =
+  [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "GSDAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merchantsListAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_limit",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "count",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "issueVoucher",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantAddress",
+          "type": "address"
+        }
+      ],
+      "name": "use10Voucher",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantAddress",
+          "type": "address"
+        }
+      ],
+      "name": "use2Voucher",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantAddress",
+          "type": "address"
+        }
+      ],
+      "name": "use5Voucher",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "voucherBalances",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "twos",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fives",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tens",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ];
   private sc: Contract;
   constructor(privateKey: string) {
     this.wallet = this.etherHelper.getWallet(privateKey);
@@ -14,6 +124,22 @@ export class CustomerHelper {
       "0x331D7FA6902e74c9FAA5058A6F0735C8565100EB",
       this.abi
     );
+  }
+
+  public async voucherBalances() {
+    try {
+      const address = await this.wallet.getAddress();
+      const vouchers = await this.sc.voucherBalances(address);
+      vouchers.map( voucher => {
+        const num = ethers.utils.formatUnits(voucher);
+        console.log('num', num);
+      })
+      ethers.utils.formatEther(vouchers[0])
+      return vouchers;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 
   public async getBalance() {
