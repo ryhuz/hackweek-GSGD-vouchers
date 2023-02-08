@@ -7,7 +7,7 @@ import "./GSGD.sol";
 import "./utils/counter.sol";
 import "./utils/enums.sol";
 
-contract NFTVouchers is ERC721, Counter {
+contract NFTVouchers is ERC721, Ownable, Counter {
     struct Vouchers {
         uint twos;
         uint fives;
@@ -17,16 +17,30 @@ contract NFTVouchers is ERC721, Counter {
     GSGD voucherVault;
     MerchantsList merchantsList;
 
-    constructor (address GSDAddress, address merchantsListAddress, uint _limit) ERC721("NFT Voucher", "NFTV") Counter(_limit) {
-        voucherVault = GSGD(GSDAddress);
-        merchantsList = MerchantsList(merchantsListAddress);
+    constructor (uint _limit) ERC721("NFT Voucher", "NFTV") Counter(_limit) {
+        voucherVault = new GSGD();
+        merchantsList = new MerchantsList();
     }
 
+    // =============================================================================
+    // Merchant
+    // =============================================================================
     modifier whenMerchantExists (address merchantAddress) {
         require(merchantsList.merchantExists(merchantAddress), "MerchantsList: Merchant does not exist");
         _;
     }
 
+    function onboardMerchant (address merchantAddress, string calldata name) public onlyOwner {
+        merchantsList.onboardMerchant(merchantAddress, name);
+    }
+
+    function merchantWithdrawTokens (address merchantAddress) public onlyOwner {
+        voucherVault.withdrawToSGD(merchantAddress);
+    }
+
+    // =========================================================================
+    // Issuance
+    // =========================================================================
     // TODO: owneronly or get user to trigger?
     function issueVoucher() public whenStillAvailable {
         voucherBalances[msg.sender] = Vouchers(5,5,5);
@@ -34,6 +48,9 @@ contract NFTVouchers is ERC721, Counter {
         _increment();
     }
 
+    // =============================================================================
+    // Usage
+    // =============================================================================
     function use2Voucher (address merchantAddress) public whenMerchantExists(merchantAddress) {
         require(voucherBalances[msg.sender].twos > 0);
 
