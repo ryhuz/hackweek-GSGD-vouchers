@@ -63,6 +63,41 @@ class VoucherHelper {
 		console.log(`[check owner]`);
 		return (await this.sc.owner()) === address;
 	}
+
+	public async getBalance() {
+		try {
+			const address = await this.wallet.getAddress();
+			const etherBalance = await this.etherHelper
+				.getProvider()
+				.getBalance(address);
+			return `${ethers.utils.formatEther(etherBalance)} ETH`;
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	}
+
+	public async getAddress() {
+		return await this.wallet.getAddress();
+	}
+
+	public async getAllVoucher() {
+		console.log("Getting all voucher ==========");
+		const address = await this.getAddress();
+		const result = await this.sc.connect(address).getAllVouchersMetadata();
+
+		const ids = await this.sc.connect(address).getAllVouchersID();
+		console.log("METADATA", result);
+		console.log("IDS", ids);
+	}
+
+	public async spendVoucher(tokenId) {
+		await this.sc["spendVoucher"](tokenId);
+	}
+
+	public async spendVoucherByMerchant(tokenId, merchantAddress) {
+		await this.sc["spendVoucher"](tokenId, merchantAddress);
+	}
 }
 
 export const voucherHelper = new VoucherHelper(currUser);
