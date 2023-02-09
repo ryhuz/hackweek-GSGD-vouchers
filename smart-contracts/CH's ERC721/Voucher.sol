@@ -16,6 +16,7 @@ contract Voucher is ERC721Enumerable, Ownable {
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    uint limit;
 
     GSGD gsgdContract;
     MerchantsList merchantsListContract;
@@ -23,9 +24,10 @@ contract Voucher is ERC721Enumerable, Ownable {
     // tokenID -> metadata
     mapping (uint256 => VoucherMetadata) _voucherMetadata;
 
-    constructor() ERC721("Voucher", "VCH") {
+    constructor(uint _limit) ERC721("Voucher", "VCH") {
       gsgdContract = new GSGD(msg.sender);
       merchantsListContract = new MerchantsList(msg.sender);
+      limit = _limit;
     }
 
     // =========================================================================
@@ -93,6 +95,7 @@ contract Voucher is ERC721Enumerable, Ownable {
 
     // Value represented with GSGD decimal
     function _mintVoucher(address account, uint256 value, address merchant) internal onlyOwner returns (uint256) {
+      require(_tokenIds.current() < limit, "Voucher limit reached");
       _tokenIds.increment();
 
       uint256 newTokenId = _tokenIds.current();
