@@ -1,3 +1,4 @@
+import { Layout } from "@lifesg/react-design-system";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { BasicPage } from "../components/common/basic-page";
@@ -27,7 +28,11 @@ const HomePage = () => {
         return <div />;
     }
   };
-  return <BasicPage>{renderComponent()}</BasicPage>;
+  return (
+    <BasicPage>
+      <Layout.Content>{renderComponent()}</Layout.Content>
+    </BasicPage>
+  );
 };
 
 export default HomePage;

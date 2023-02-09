@@ -1,17 +1,17 @@
-export const _blockChainUrl = "http://127.0.0.1:7545";
+export const _blockChainUrl = "http://127.0.0.1:8545";
 
 export const DEFAULT_ADMIN_ROLE =
-	"0x0000000000000000000000000000000000000000000000000000000000000000";
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 // =============================================================================
 // Current User Private Key
 // =============================================================================
 
 const customerPvtKey =
-	"d905987f2dfec8d719ea0c5b2512a4fb5133676333d6a561985357ff0f491eb1";
+  "0x87ebbe062d8df5c6245703452d8926973573b4c398d3cc9a0b607e9687afe5d8";
 
 const adminPvtKey =
-	"4e81ba28faa1371415614d87692fdb366f120718d12e79a0242c4bedb9f2a9ea";
+  "0x9b670cab6d95da261c7a47bc54ae7b18e6cb6429448370ead4d6418b9408bf0a";
 
 export const currUser = adminPvtKey;
 
@@ -19,10 +19,10 @@ export const currUser = adminPvtKey;
 // Contract Addresses
 // =============================================================================
 export const _voucherContractAddress =
-	"0x159a64f5FB2943dEff815a61Da5AF011326822E1";
+  "0x093c07920E4075C78aF8220560CdE74389b3e37e";
 
 export const _merchantListContractAddress =
-	"0xb4D44BF5FB996768f0029AC555AC6d4082fdb0Bf";
+  "0x32D88F41a2F71114e17400cbC1fA8983166d487c";
 
-  export const _gsgdContractAddress =
-	"0xaFfaD952FAfECC2Ca619877FCBD54d0AD1aEc4b0";
+export const _gsgdContractAddress =
+  "0xaFfaD952FAfECC2Ca619877FCBD54d0AD1aEc4b0";
