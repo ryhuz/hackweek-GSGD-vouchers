@@ -91,36 +91,30 @@ class VoucherHelper {
 		console.log("IDS", ids);
 	}
 
-	// public async spendVoucher(tokenId) {
-	// 	await this.signedSC["spendVoucher(uint256)"](tokenId);
-	// }
-
-	// public async spendVoucherByMerchant(tokenId, merchantAddress) {
-	// 	await this.signedSC["spendVoucher(uint256,address)"](tokenId, merchantAddress);
-	// }
-
-	public async spendVoucher(
-		tokenId: number,
-		merchantAddress?: string
-	) {
+	public async spendVoucher(tokenId: number, merchantAddress?: string) {
 		console.log(
 			`[spendVoucher] with params:  ${tokenId} + ${merchantAddress}`
 		);
 		try {
-			const signer = await this.etherHelper.getSigner();
+			const address = await this.getAddress();
+
+			const signer = await this.etherHelper.getSigner(address);
 			this.signedSC = new ethers.Contract(
 				this.voucherContractAddress,
 				this.abi,
 				signer
 			);
+
 			const tx = merchantAddress
-				? await this.signedSC["spendVoucher(uint256,address)"](
-						tokenId,
-						merchantAddress
-				  )
-				: await this.signedSC["spendVoucher(uint256)"](
-						tokenId
-				  );
+				? await this.signedSC
+						.connect(signer)
+						["spendVoucher(uint256,address)"](
+							tokenId,
+							merchantAddress
+						)
+				: await this.signedSC
+						.connect(signer)
+						["spendVoucher(uint256)"](tokenId);
 			await tx.wait();
 		} catch (error) {
 			alert("error");
