@@ -1,9 +1,13 @@
 import { Contract, ethers, Wallet } from "ethers";
 import { EtherHelper } from ".";
-import { DEFAULT_ADMIN_ROLE, _merchantListContractAddress } from "../keys";
+import {
+	currUser,
+	DEFAULT_ADMIN_ROLE,
+	_merchantListContractAddress,
+} from "../keys";
 import { _abi } from "./abi/merchantList";
 
-export class MerchantHelper {
+class MerchantHelper {
 	private wallet: Wallet;
 	private etherHelper = new EtherHelper();
 
@@ -65,3 +69,5 @@ export class MerchantHelper {
 		return await this.sc.hasRole(DEFAULT_ADMIN_ROLE, address);
 	}
 }
+
+export const merchantHelper = new MerchantHelper(currUser);

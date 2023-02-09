@@ -18,5 +18,8 @@ export const currUser = adminPvtKey;
 // =============================================================================
 // Contract Addresses
 // =============================================================================
+export const _voucherContractAddress =
+	"0x159a64f5FB2943dEff815a61Da5AF011326822E1";
+
 export const _merchantListContractAddress =
-	"0xEb0aF66A2BFbC91262623103D6DEF698c2d13fAd";
+	"0xb4D44BF5FB996768f0029AC555AC6d4082fdb0Bf";
