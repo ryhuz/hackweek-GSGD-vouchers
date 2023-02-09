@@ -2,7 +2,7 @@
 pragma solidity ^0.8.6;
 
 import "./GSGD.sol";
-import "./merchantsList.sol";
+import "./MerchantsList.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
