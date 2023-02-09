@@ -26,6 +26,33 @@ export const CustomerComponent = (): JSX.Element => {
 		setCustomer(customer);
 	};
 
+	// const handleGetCustomerProfile = async (e: FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault();
+	// 	if (customerPK) {
+	// 		setGetProfile(true);
+	// 	} else {
+	// 		alert("PK Value not set");
+	// 	}
+	// };
+
+	// function handlePKChange(evt: ChangeEvent<HTMLInputElement>) {
+	// 	console.log(evt.target.value);
+	// 	setCustomerPK(evt.target.value.trim());
+	// }
+
+	// function handleChangePKBtn() {
+	// 	setCustomer(null);
+	// 	setCustomerPK("");
+	// 	setGetProfile(false);
+	// }
+	// function refreshProfile() {
+	// 	setGetProfile(true);
+	// }
+
+  function handleSpendVoucher(tokenId) {
+		const vh = voucherHelper;
+    vh.spendVoucher(1);
+  }
 	return (
 		<div>
 			{customer ? (
@@ -35,6 +62,9 @@ export const CustomerComponent = (): JSX.Element => {
 					<h2>
 						Voucher Balance: {customer.voucherBalance?.toString()}
 					</h2>
+					{/* <button onClick={handleChangePKBtn}>Change PK</button>
+					<button onClick={refreshProfile}>Refresh Profile</button> */}
+          <button onClick={handleSpendVoucher}>Spend Voucher</button>
 				</div>
 			) : (
 				<></>
