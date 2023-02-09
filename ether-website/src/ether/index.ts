@@ -21,8 +21,8 @@ export class EtherHelper {
     this.provider = new ethers.providers.JsonRpcProvider(blockChainUrl);
   }
 
-  public getWallet(address: string) {
-    return new Wallet(address, this.provider);
+  public getWallet(privateKey: string) {
+    return new Wallet(privateKey, this.provider);
   }
 
   public getSmartContract(

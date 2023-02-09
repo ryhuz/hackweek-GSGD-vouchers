@@ -15,16 +15,19 @@ export const CustomerComponent = (): JSX.Element => {
   useEffect(() => {
     if (customerPK && getProfile) {
       getCustomerProfile();
+      setGetProfile(false);
     }
   }, [getProfile]);
 
   const getCustomerProfile = async () => {
     //replace with your wallet pk
     const ch = new CustomerHelper(customerPK);
+    await ch.getAllVoucher();
     const customer: CustomerProfile = {
       walletAddress: await ch.getAddress(),
       ETHBalance: await ch.getBalance(),
-      voucherBalance: await ch.voucherBalances(),
+      voucherBalance: "",
+      //voucherBalance: await ch.voucherBalances(),
     };
     setCustomer(customer);
   };
@@ -40,7 +43,7 @@ export const CustomerComponent = (): JSX.Element => {
 
   function handlePKChange(evt: ChangeEvent<HTMLInputElement>) {
     console.log(evt.target.value);
-    setCustomerPK(evt.target.value);
+    setCustomerPK(evt.target.value.trim());
   }
 
   function handleChangePKBtn() {
@@ -48,17 +51,21 @@ export const CustomerComponent = (): JSX.Element => {
     setCustomerPK("");
     setGetProfile(false);
   }
+  function refreshProfile() {
+    setGetProfile(true);
+  }
   return (
     <div>
       {customer ? (
         <div>
           <h2>Customer Address: {customer.walletAddress}</h2>
           <h2>ETH Balance: {customer.ETHBalance}</h2>
-          <h2>Voucher Balance: {customer.voucherBalance.toString()}</h2>
+          <h2>Voucher Balance: {customer.voucherBalance?.toString()}</h2>
           <h3>twos: </h3>
           <h3>fives: </h3>
           <h3>tens: </h3>
           <button onClick={handleChangePKBtn}>Change PK</button>
+          <button onClick={refreshProfile}>Refresh Profile</button>
         </div>
       ) : (
         <form onSubmit={handleGetCustomerProfile}>
