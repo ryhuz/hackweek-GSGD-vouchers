@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { MerchantWhitelist } from "../components/merchantWhitelist";
-import { AirdropVouchers } from "../components/airdropVouchers";
 import { merchantHelper } from "../ether/merchant";
 import { voucherHelper } from "../ether/voucher";
-import { Layout } from "@lifesg/react-design-system";
-import { CustomContainer } from "../components/common/common-styles";
+import { AirdropVouchers } from "./airdropVouchers";
+import { CustomContainer } from "./common/common-styles";
+import { MerchantWhitelist } from "./merchantWhitelist";
 
-export const AdminPage = (): JSX.Element => {
+export const AdminComponent = (): JSX.Element => {
   const [isMerchantAdmin, setIsMerchantAdmin] = useState<boolean>();
   const [isVoucherOwner, setIsVoucherOwner] = useState<boolean>();
   const mh = merchantHelper;
@@ -37,9 +36,9 @@ export const AdminPage = (): JSX.Element => {
   if (isMerchantAdmin === false || isVoucherOwner === false) {
     return (
       <>
-        <Layout.Container>
+        <CustomContainer>
           <h1>Not Admin</h1>
-        </Layout.Container>
+        </CustomContainer>
       </>
     );
   }

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 import HomePage, { PageEnum } from "../../pages";
-import { AdminPage } from "../../pages/admin";
+import { AdminComponent } from "../admin";
 import { CustomerComponent } from "../customer";
 import { MerchantComponent } from "../merchant";
 

@@ -5,7 +5,7 @@ import { BasicPage } from "../components/common/basic-page";
 import { CustomerComponent } from "../components/customer";
 import { MerchantComponent } from "../components/merchant";
 import styles from "../css/homepage.module.css";
-import { AdminPage } from "./admin";
+import { AdminComponent } from "../components/admin";
 
 export enum PageEnum {
   ADMIN = "admin",
@@ -19,7 +19,7 @@ const HomePage = () => {
   const renderComponent = () => {
     switch (router.query.page as PageEnum) {
       case PageEnum.ADMIN:
-        return <AdminPage />;
+        return <AdminComponent />;
       case PageEnum.CUSTOMER:
         return <CustomerComponent />;
       case PageEnum.MERCHANT:
