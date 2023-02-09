@@ -132,6 +132,10 @@ class VoucherHelper {
       console.log("[ Error ]", error);
     }
   }
+
+  public isEmptyHexAddress(address: string) {
+    return address === ethers.constants.AddressZero;
+  }
 }
 
 export const voucherHelper = new VoucherHelper(currUser);
