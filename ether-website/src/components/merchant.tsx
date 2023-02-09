@@ -1,10 +1,12 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { GSGDHelper } from "../ether/gsgd";
+import { merchantHelper } from "../ether/merchant";
 
 export const MerchantComponent = (): JSX.Element => {
   const [merchant, setMerchant] = useState(null);
   const [merchantPK, setMerchantPK] = useState("");
   const [getProfile, setGetProfile] = useState(false);
+  const mh = merchantHelper
 
   useEffect(() => {
     if (merchantPK && getProfile) {
@@ -16,9 +18,12 @@ export const MerchantComponent = (): JSX.Element => {
   const getMerchantProfile = async () => {
     //replace with your wallet pk
     const ch = new GSGDHelper(merchantPK);
+    const walletAddress = await ch.getAddress();
+
     const merchant = {
-      walletAddress: await ch.getAddress(),
+      walletAddress,
       GSGDBalance: await ch.gsgdBalances(),
+      merchantName: await mh.getMerchantName(walletAddress)
     };
     setMerchant(merchant);
   };
@@ -49,7 +54,7 @@ export const MerchantComponent = (): JSX.Element => {
     <div>
       {merchant ? (
         <div>
-          <h2>Merchant Address: {merchant.walletAddress}</h2>
+          <h2>Merchant Name: {merchant.merchantName}</h2>
           <h2>GSGD Balance: {merchant.GSGDBalance?.toString()}</h2>
           <button onClick={handleChangePKBtn}>Change PK</button>
           <button onClick={refreshProfile}>Refresh Profile</button>
