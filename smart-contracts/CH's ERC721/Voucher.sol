@@ -10,6 +10,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 contract Voucher is ERC721Enumerable, Ownable {
 
     struct VoucherMetadata{
+      uint256 tokenId;
       uint256 value;    // Same decimal as GSGD
       address merchant; // Optional
     }
@@ -51,13 +52,13 @@ contract Voucher is ERC721Enumerable, Ownable {
       return _voucherMetadata[tokenId].merchant;
     }
 
-    function getAllVouchersID(address account) public view returns (uint256[] memory) {
+    function getAllVouchersID() public view returns (uint256[] memory) {
       uint256 voucherCount = 0;
-      uint256 balance = balanceOf(account);
+      uint256 balance = balanceOf(msg.sender);
       uint256[] memory ownedVouchers = new uint256[](balance);
 
       for(uint256 i = 0; i < balance; i++) {
-        uint256 tokenId = tokenOfOwnerByIndex(account, i);
+        uint256 tokenId = tokenOfOwnerByIndex(msg.sender, i);
         ownedVouchers[voucherCount] = tokenId;
         voucherCount++;
       }
@@ -65,13 +66,13 @@ contract Voucher is ERC721Enumerable, Ownable {
       return ownedVouchers;
     }
 
-    function getAllVouchersMetadata(address account) public view returns (VoucherMetadata[] memory) {
+    function getAllVouchersMetadata() public view returns (VoucherMetadata[] memory) {
       uint256 voucherCount = 0;
-      uint256 balance = balanceOf(account);
+      uint256 balance = balanceOf(msg.sender);
       VoucherMetadata[] memory ownedVouchers = new VoucherMetadata[](balance);
 
       for(uint256 i = 0; i < balance; i++) {
-        uint256 tokenId = tokenOfOwnerByIndex(account, i);
+        uint256 tokenId = tokenOfOwnerByIndex(msg.sender, i);
         VoucherMetadata memory voucherMetadata = _voucherMetadata[tokenId];
         ownedVouchers[voucherCount] = voucherMetadata;
         voucherCount++;
@@ -129,7 +130,7 @@ contract Voucher is ERC721Enumerable, Ownable {
 
       uint256 newTokenId = _tokenIds.current();
       _mint(account, newTokenId);
-      _voucherMetadata[newTokenId] = VoucherMetadata(value, merchant);
+      _voucherMetadata[newTokenId] = VoucherMetadata(newTokenId, value, merchant);
 
       return newTokenId;
     }
