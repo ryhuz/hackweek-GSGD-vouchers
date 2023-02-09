@@ -1,145 +1,16 @@
 import { Contract, ethers, Wallet } from "ethers";
 import { EtherHelper } from ".";
+import { _voucherContractAddress } from "../keys";
+import { _abi } from "./abi/voucher";
 
 export class CustomerHelper {
   private wallet: Wallet;
   private etherHelper = new EtherHelper();
 
-  private abi = [
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "GSDAddress",
-          type: "address",
-        },
-        {
-          internalType: "address",
-          name: "merchantsListAddress",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "_limit",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "constructor",
-    },
-    {
-      inputs: [],
-      name: "count",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "issueVoucher",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "merchantAddress",
-          type: "address",
-        },
-      ],
-      name: "use10Voucher",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "merchantAddress",
-          type: "address",
-        },
-      ],
-      name: "use2Voucher",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "merchantAddress",
-          type: "address",
-        },
-      ],
-      name: "use5Voucher",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      name: "voucherBalances",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "twos",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "fives",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "tens",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-  ];
   private sc: Contract;
   constructor(privateKey: string) {
     this.wallet = this.etherHelper.getWallet(privateKey);
-    //replace with your nftVoucher address
-    this.sc = this.etherHelper.getSmartContract(
-      "0x83EDa876dbE08aA000446fC871aa213F3D64CEa6",
-      this.abi
-    );
-  }
-
-  public async voucherBalances() {
-    try {
-      const address = await this.wallet.getAddress();
-      const vouchers = await this.sc.voucherBalances(address);
-      vouchers.map((voucher) => {
-        const num = ethers.utils.formatUnits(voucher);
-        console.log("num", num);
-      });
-      ethers.utils.formatEther(vouchers[0]);
-      return vouchers;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+    this.sc = this.etherHelper.getSmartContract(_voucherContractAddress, _abi);
   }
 
   public async getBalance() {
@@ -157,5 +28,16 @@ export class CustomerHelper {
 
   public async getAddress() {
     return await this.wallet.getAddress();
+  }
+
+  public async getAllVoucher() {
+    console.log("Getting all voucher ==========");
+    const address = await this.wallet.getAddress();
+    const result = await this.sc.getAllVouchersMetadata(address);
+
+    const ids = await this.sc.getAllVouchersID(address);
+    console.log("METADATA", result);
+    console.log("IDS", ids);
+    //this.sc['getVoucherMerchant()'](tokenId);
   }
 }
