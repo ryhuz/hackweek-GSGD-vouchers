@@ -27,7 +27,6 @@ export const CustomerComponent = (): JSX.Element => {
       walletAddress: await ch.getAddress(),
       ETHBalance: await ch.getBalance(),
       voucherBalance: "",
-      //voucherBalance: await ch.voucherBalances(),
     };
     setCustomer(customer);
   };
@@ -61,9 +60,6 @@ export const CustomerComponent = (): JSX.Element => {
           <h2>Customer Address: {customer.walletAddress}</h2>
           <h2>ETH Balance: {customer.ETHBalance}</h2>
           <h2>Voucher Balance: {customer.voucherBalance?.toString()}</h2>
-          <h3>twos: </h3>
-          <h3>fives: </h3>
-          <h3>tens: </h3>
           <button onClick={handleChangePKBtn}>Change PK</button>
           <button onClick={refreshProfile}>Refresh Profile</button>
         </div>
