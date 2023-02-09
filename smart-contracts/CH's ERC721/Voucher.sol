@@ -51,6 +51,35 @@ contract Voucher is ERC721Enumerable, Ownable {
       return _voucherMetadata[tokenId].merchant;
     }
 
+    function getAllVouchersID(address account) public view returns (uint256[] memory) {
+      uint256 voucherCount = 0;
+      uint256 balance = balanceOf(account);
+      uint256[] memory ownedVouchers = new uint256[](balance);
+
+      for(uint256 i = 0; i < balance; i++) {
+        uint256 tokenId = tokenOfOwnerByIndex(account, i);
+        ownedVouchers[voucherCount] = tokenId;
+        voucherCount++;
+      }
+      
+      return ownedVouchers;
+    }
+
+    function getAllVouchersMetadata(address account) public view returns (VoucherMetadata[] memory) {
+      uint256 voucherCount = 0;
+      uint256 balance = balanceOf(account);
+      VoucherMetadata[] memory ownedVouchers = new VoucherMetadata[](balance);
+
+      for(uint256 i = 0; i < balance; i++) {
+        uint256 tokenId = tokenOfOwnerByIndex(account, i);
+        VoucherMetadata memory voucherMetadata = _voucherMetadata[tokenId];
+        ownedVouchers[voucherCount] = voucherMetadata;
+        voucherCount++;
+      }
+      
+      return ownedVouchers;
+    }
+
     // ===========================================================================
     // Write
     // ===========================================================================
