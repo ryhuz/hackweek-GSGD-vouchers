@@ -25,6 +25,10 @@ contract MerchantsList is Ownable, AccessControl {
         return merchantMap[merchantAddress].onboarded;
     }
 
+    function getMerchantName(address merchantAddress) external view returns(string memory) {
+        return merchantMap[merchantAddress].name;
+    }
+
     // =========================================================================
     // Write
     // =========================================================================

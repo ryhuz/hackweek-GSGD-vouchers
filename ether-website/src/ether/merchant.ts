@@ -42,9 +42,19 @@ export class MerchantHelper {
 		}
 	}
 
-	public async merchantExists(address: string): Promise<string> {
+	public async merchantExists(
+		address: string
+	): Promise<{ isOnboarded: boolean; merchantName: string }> {
 		console.log(`[merchantExists] with params:  ${address}`);
-		return await this.sc.hasOnboarded(address);
+
+		const [isOnboarded, merchantName] = await Promise.all([
+			this.sc.hasOnboarded(address),
+			this.sc.getMerchantName(address),
+		]);
+		return {
+			isOnboarded,
+			merchantName,
+		};
 	}
 
 	public async hasRole() {
