@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.6;
 
-import "./node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./merchantsList.sol";
 import "./GSGD.sol";
-import "./utils/counter.sol";
-import "./utils/enums.sol";
+import "../utils/counter.sol";
+import "../utils/enums.sol";
 
 contract NFTVouchers is ERC721, Ownable, Counter {
     struct Vouchers {
