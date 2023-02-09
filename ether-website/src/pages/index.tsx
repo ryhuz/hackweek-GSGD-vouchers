@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CustomerComponent } from "../components/customer";
+import { MerchantComponent } from "../components/merchant";
 import styles from "../css/homepage.module.css";
 import { AdminPage } from "./admin";
 
@@ -44,6 +45,7 @@ function HomePage(): JSX.Element {
       </div>
       {currentPage.includes("/customer") && <CustomerComponent />}
       {currentPage.includes("/admin") && <AdminPage />}
+      {currentPage.includes("/merchant") && <MerchantComponent />}
     </React.Fragment>
   );
 }

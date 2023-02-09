@@ -23,3 +23,6 @@ export const _voucherContractAddress =
 
 export const _merchantListContractAddress =
 	"0xb4D44BF5FB996768f0029AC555AC6d4082fdb0Bf";
+
+  export const _gsgdContractAddress =
+	"0xaFfaD952FAfECC2Ca619877FCBD54d0AD1aEc4b0";
