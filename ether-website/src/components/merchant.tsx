@@ -1,12 +1,16 @@
+import { Button } from "@lifesg/react-design-system/button";
+import { Form } from "@lifesg/react-design-system/form";
+import { Layout } from "@lifesg/react-design-system/layout";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { GSGDHelper } from "../ether/gsgd";
 import { merchantHelper } from "../ether/merchant";
+import { CustomContainer, FormSection } from "./common/common-styles";
 
 export const MerchantComponent = (): JSX.Element => {
   const [merchant, setMerchant] = useState(null);
   const [merchantPK, setMerchantPK] = useState("");
   const [getProfile, setGetProfile] = useState(false);
-  const mh = merchantHelper
+  const mh = merchantHelper;
 
   useEffect(() => {
     if (merchantPK && getProfile) {
@@ -23,7 +27,7 @@ export const MerchantComponent = (): JSX.Element => {
     const merchant = {
       walletAddress,
       GSGDBalance: await ch.gsgdBalances(),
-      merchantName: await mh.getMerchantName(walletAddress)
+      merchantName: await mh.getMerchantName(walletAddress),
     };
     setMerchant(merchant);
   };
@@ -51,28 +55,31 @@ export const MerchantComponent = (): JSX.Element => {
     setGetProfile(true);
   }
   return (
-    <div>
+    <CustomContainer>
       {merchant ? (
-        <div>
+        <Layout.Container>
           <h2>Merchant Name: {merchant.merchantName}</h2>
           <h2>GSGD Balance: {merchant.GSGDBalance?.toString()}</h2>
-          <button onClick={handleChangePKBtn}>Change PK</button>
-          <button onClick={refreshProfile}>Refresh Profile</button>
-        </div>
+          <Button.Default onClick={handleChangePKBtn}>Change PK</Button.Default>
+          <Button.Default onClick={refreshProfile}>
+            Refresh Profile
+          </Button.Default>
+        </Layout.Container>
       ) : (
-        <form onSubmit={handleGetMerchantProfile}>
-          <label>
-            Merchant Wallet PK:
-            <input
-              type="text"
+        <FormSection>
+          <form onSubmit={handleGetMerchantProfile}>
+            <Form.Input
+              label="Merchant Wallet PK"
+              placeholder="Enter here..."
               value={merchantPK}
-              name="setMerchantPK"
               onChange={handlePKChange}
             />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
+            <Button.Default type="submit" value="submit">
+              Get Details
+            </Button.Default>
+          </form>
+        </FormSection>
       )}
-    </div>
+    </CustomContainer>
   );
 };
