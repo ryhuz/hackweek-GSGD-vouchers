@@ -1,71 +1,85 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MerchantHelper } from "../ether/merchant";
+import { currUser } from "../keys";
 
 export const AdminPage = (): JSX.Element => {
-  const [state, setState] = useState({
-    setMerchant: "",
-    checkMerchant: "",
-    merchantExists: null,
-    mh: null
-  })
+	const [isMerchantAdmin, setIsMerchantAdmin] = useState(true);
+	const [merchantExists, setMerchantExists] = useState<boolean>();
+	const [mh, setMh] = useState(null);
 
-  useEffect(() => {
-    initMerchantHelper()
-  }, []);
+	const setMerchantRef = useRef<HTMLInputElement>();
+	const checkMerchantRef = useRef<HTMLInputElement>();
 
-  const initMerchantHelper = () => {
-    setState({
-      ...state,
-      mh: new MerchantHelper("0x5b3208286264f409e1873e3709d3138acf47f6cc733e74a6b47a040b50472fd8")
-    })
-  }
+	useEffect(() => {
+		initMerchantHelper();
+	}, []);
 
-  function handleChange(evt) {
-    const value = evt.target.value;
-    setState({
-      ...state,
-      [evt.target.name]: value
-    });
-  }
+	useEffect(() => {
+		if (mh) {
+			checkIfAdmin();
+		}
+	}, [mh]);
 
-  const handleOnboardMerchant = async (e) => {
-    e.preventDefault();
+	const initMerchantHelper = () => {
+		setMh(new MerchantHelper(currUser));
+	};
 
-    console.log(`[ handleOnboardMerchant ]`, state.mh);
-    await state.mh.onboardMerchant(state.setMerchant, "test")
-    console.log(`[ handleOnboardMerchant ] Done`);
-  }
+	const checkIfAdmin = async () => {
+		const hasRole = await mh.hasRole(currUser);
+		console.log("has default admin role", hasRole);
+		setIsMerchantAdmin(hasRole);
+	};
 
-  const handleMerchantExists = async (e) => {
-    e.preventDefault();
+	const handleOnboardMerchant = async (e) => {
+		e.preventDefault();
 
-    console.log(`[ handleMerchantExists ]`, state.mh);
-    const exists = await state.mh.merchantExists(state.checkMerchant)
-    console.log(`[ handleMerchantExists ] Exists?  ${exists}`);
-    setState({
-      ...state,
-      merchantExists: exists
-    });
-  }
+		console.log(`[ handleOnboardMerchant ]`, setMerchantRef.current.value);
+		await mh.onboardMerchant(setMerchantRef.current.value, "test");
+		console.log(`[ handleOnboardMerchant ] Done`);
+	};
 
-  return (
-    <React.Fragment>
-      <h1>Onboard Merchant</h1>
-      <form onSubmit={handleOnboardMerchant}>
-        <label>New merchant address:
-          <input type="text" value={state.setMerchant} name="setMerchant" onChange={handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      <form onSubmit={handleMerchantExists}>
-        <label>Check merchant address:
-          <input type="text" value={state.checkMerchant} name="checkMerchant" onChange={handleChange} />
-          <input type="submit" value="Check" />
-        </label>
-        <h2> Does merchant exist?</h2>
-        {state.merchantExists ? <>Yes</> : <></>}
-      </form>
-    </React.Fragment>
-  );
-}
+	const handleMerchantExists = async (e) => {
+		e.preventDefault();
 
+		console.log(`[ handleMerchantExists ]`, checkMerchantRef.current.value);
+		const exists = await mh.merchantExists(checkMerchantRef.current.value);
+		console.log(`[ handleMerchantExists ] Exists?  ${exists}`);
+		setMerchantExists(exists);
+	};
+
+	return isMerchantAdmin ? (
+		<React.Fragment>
+			<h1>Onboard Merchant</h1>
+			<form onSubmit={handleOnboardMerchant}>
+				<label>
+					New merchant address:
+					<input
+						type="text"
+						ref={setMerchantRef}
+						name="setMerchant"
+					/>
+				</label>
+				<input type="submit" value="Submit" />
+			</form>
+			<form onSubmit={handleMerchantExists}>
+				<label>
+					Check merchant address:
+					<input
+						type="text"
+						ref={checkMerchantRef}
+						name="checkMerchant"
+					/>
+					<input type="submit" value="Check" />
+				</label>
+				<h2>
+					Does merchant exist? ({checkMerchantRef.current?.value})
+				</h2>
+				{merchantExists !== undefined && (
+					<>{merchantExists ? "is onboarded" : "not onboarded"}</>
+				)}
+			</form>
+		</React.Fragment>
+	) : (
+		<>Not Admin</>
+	);
+};
