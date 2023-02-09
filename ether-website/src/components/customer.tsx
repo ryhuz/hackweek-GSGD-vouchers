@@ -43,7 +43,7 @@ export const CustomerComponent = (): JSX.Element => {
 
   function handlePKChange(evt: ChangeEvent<HTMLInputElement>) {
     console.log(evt.target.value);
-    setCustomerPK(evt.target.value);
+    setCustomerPK(evt.target.value.trim());
   }
 
   function handleChangePKBtn() {
