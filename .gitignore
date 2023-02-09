@@ -3,3 +3,6 @@ artifacts
 
 # next.js
 .next
+
+#solidity
+bin

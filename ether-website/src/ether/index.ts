@@ -1,4 +1,4 @@
-import { Contract, ContractInterface, ethers, Wallet } from "ethers";
+import { Contract, ContractInterface, ethers, Wallet, Signer } from "ethers";
 
 export class EtherHelper {
   private provider: ethers.providers.JsonRpcProvider;
@@ -25,7 +25,14 @@ export class EtherHelper {
     return new Wallet(address, this.provider);
   }
 
-  public getSmartContract(address: string, abi: ContractInterface) {
+  public getSmartContract(
+    address: string,
+    abi: ContractInterface,
+    signer?: Signer
+  ) {
+    if (signer) {
+      return new Contract(address, abi, signer);
+    }
     return new Contract(address, abi, this.provider);
   }
 
