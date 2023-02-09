@@ -9,21 +9,19 @@ export interface CustomerProfile {
 
 export const CustomerComponent = (): JSX.Element => {
   const [customer, setCustomer] = useState<CustomerProfile>(null);
+  const vh = voucherHelper;
 
   useEffect(() => {
     getCustomerProfile();
   }, []);
 
   const getCustomerProfile = async () => {
-    //replace with your wallet pk
-    const ch = voucherHelper;
-
     const customer: CustomerProfile = {
-      walletAddress: await ch.getAddress(),
-      ETHBalance: await ch.getBalance(),
-      vouchers: await ch.getAllVoucher(),
+      walletAddress: await vh.getAddress(),
+      ETHBalance: await vh.getBalance(),
+      vouchers: await vh.getAllVoucher(),
     };
-    console.log(customer);
+
     setCustomer(customer);
   };
 
@@ -50,8 +48,8 @@ export const CustomerComponent = (): JSX.Element => {
   // 	setGetProfile(true);
   // }
 
-  function handleSpendVoucher(tokenId) {
-    const vh = voucherHelper;
+  function handleSpendVoucher() {
+    //TODO: form to select which voucher with state
     vh.spendVoucher(1);
   }
 
@@ -59,15 +57,18 @@ export const CustomerComponent = (): JSX.Element => {
     return (
       <>
         {customer.vouchers.map((voucher: Voucher, index: number) => {
-          {
-            console.log("ADDRESS", voucher.merchantAddress.toString());
-          }
-          <li key={index}>
-            <div>1</div>
-            <div>{voucher.merchantAddress.toString()}</div>
-            <div>{voucher.tokenId.toString()}</div>
-            <div>{voucher.value.toString()}</div>
-          </li>;
+          return (
+            <li key={index}>
+              <div>Token ID:{voucher.tokenId.toString()}</div>
+              <div>
+                Merchant Address:
+                {vh.isEmptyHexAddress(voucher.merchantAddress.toString())
+                  ? "No merchant address"
+                  : voucher.merchantAddress.toString()}
+              </div>
+              <div>Voucher Value:{voucher.value.toString()}</div>
+            </li>
+          );
         })}
       </>
     );
