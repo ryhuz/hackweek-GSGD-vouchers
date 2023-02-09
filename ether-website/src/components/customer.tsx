@@ -46,6 +46,7 @@ export const CustomerComponent = (): JSX.Element => {
   function handleChangePKBtn() {
     setCustomer(null);
     setCustomerPK("");
+    setGetProfile(false);
   }
   return (
     <div>
