@@ -6,6 +6,7 @@ import { _abi } from "./abi/voucher";
 export interface Voucher {
   tokenId: number;
   merchantAddress: string;
+  merchantName?: string;
   value: number;
 }
 class VoucherHelper {

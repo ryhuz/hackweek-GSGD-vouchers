@@ -61,6 +61,16 @@ class MerchantHelper {
 		};
 	}
 
+  public async getMerchantName(
+    address: string
+  ): Promise<string> {
+    try{
+      return await this.sc.getMerchantName(address);
+    } catch (err){
+      return null;
+    }
+  }
+
 	public async hasRole() {
 		const address = await this.wallet.getAddress();
 		console.log(
