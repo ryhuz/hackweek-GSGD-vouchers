@@ -100,7 +100,7 @@ export const CustomerComponent = (): JSX.Element => {
         {customer.vouchers.map((voucher: Voucher, index: number) => {
           return (
             <>
-              <Masonry.Tile startSm={1} colsSm={2} style={{height: 300}}>
+              <Masonry.Tile startSm={1} colsSm={2}>
                 <div className={styles.DemoContainer}>
                   {voucher.merchantName ? voucher.merchantName : "Any Merchant"}
                   {` - $${voucher.value}`}
