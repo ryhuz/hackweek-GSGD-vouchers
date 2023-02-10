@@ -98,6 +98,7 @@ export const CustomerComponent = (): JSX.Element => {
               <Masonry.Tile startSm={1} colsSm={2}>
                 <div className={styles.DemoContainer}>
                   {voucher.merchantName ? voucher.merchantName : "Any Merchant"}
+                  {` - $${voucher.value}`}
                   <Button.Default
                     onClick={() =>
                       handleSpendVoucher(
