@@ -57,14 +57,18 @@ export const MerchantComponent = (): JSX.Element => {
   return (
     <CustomContainer>
       {merchant ? (
-        <Layout.Container>
-          <h2>Merchant Name: {merchant.merchantName}</h2>
-          <h2>GSGD Balance: {merchant.GSGDBalance?.toString()}</h2>
-          <Button.Default onClick={handleChangePKBtn}>Change PK</Button.Default>
-          <Button.Default onClick={refreshProfile}>
-            Refresh Profile
-          </Button.Default>
-        </Layout.Container>
+        <Layout.Section>
+          <Layout.Container>
+            <h2>Merchant Name: {merchant.merchantName}</h2>
+            <h2>GSGD Balance: {merchant.GSGDBalance?.toString()}</h2>
+          </Layout.Container>
+          <Layout.Container>
+            <Button.Default onClick={handleChangePKBtn}>Change PK</Button.Default>
+            <Button.Default onClick={refreshProfile}>
+              Refresh Profile
+            </Button.Default>
+          </Layout.Container>
+        </Layout.Section>
       ) : (
         <FormSection>
           <form onSubmit={handleGetMerchantProfile}>

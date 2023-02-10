@@ -24,6 +24,7 @@ export const MerchantWhitelist = ({ helper }) => {
       setMerchantNameRef.current.value
     );
     console.log(`[ handleOnboardMerchant ] Done`);
+    window.alert("Merchant onboarded successfully");
   };
 
   const handleMerchantExists = async (e) => {
