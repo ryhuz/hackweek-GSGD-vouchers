@@ -1,7 +1,7 @@
 import { MediaQuery } from "@lifesg/react-design-system/media";
 import { Navbar } from "@lifesg/react-design-system/navbar";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import HomePage, { PageEnum } from "../../pages";
 import { AdminComponent } from "../admin";
@@ -14,8 +14,11 @@ export interface PageProps {
 
 export const BasicPage = ({ children }: PageProps): JSX.Element => {
   const router = useRouter();
+  const [selectedId, setSelectedId] = useState("customer");
+
   const handleOnNavItemClick = (item) => {
     if (item.href) {
+      setSelectedId(item.id);
       router.push(item.href);
     }
   };
@@ -46,7 +49,7 @@ export const BasicPage = ({ children }: PageProps): JSX.Element => {
               },
             ],
           }}
-          selectedId="customer"
+          selectedId={selectedId}
           onItemClick={handleOnNavItemClick}
         />
         <ContentWrapper>{children}</ContentWrapper>
