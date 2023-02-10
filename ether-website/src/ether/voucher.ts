@@ -87,26 +87,9 @@ class VoucherHelper {
   public async getAllVoucher() {
     console.log(`[getAllVoucher]`);
     const address = await this.getAddress();
-    //const results = await this.sc.connect(address).getAllVouchersMetadata();
-    const ids = await this.sc.connect(address).getAllVouchersID();
-
-    const vouchers: Voucher[] = [];
-    for (let index = 0; index < ids.length; index++) {
-      const res = ids[index];
-      console.log("[voucher]", res);
-      const tokenId = ethers.BigNumber.from(res).toNumber();
-      const merchantAddress = await this.sc
-        .connect(address)
-        .getVoucherMerchant(tokenId);
-      const bigNumVoucherValue = await this.sc
-        .connect(address)
-        .getVoucherValue(tokenId);
-      vouchers.push({
-        value: ethers.BigNumber.from(bigNumVoucherValue).toNumber(),
-        merchantAddress,
-        tokenId,
-      });
-    }
+    const results: any[] = await this.sc.connect(address).getAllVouchers();
+    console.log("[vouchers]", results);
+    const vouchers: Voucher[] = results.map((res) => res);
     return vouchers;
   }
 

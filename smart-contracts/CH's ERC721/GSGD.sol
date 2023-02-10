@@ -25,11 +25,14 @@ contract GSGD is ERC20, ERC20Burnable, Ownable, AccessControl {
     // =========================================================================
 
     function mint(address account, uint256 amount) public onlyOwner {
+        // Permissions also guarded by _beforeTokenTransfer
+        // Only the voucher smart contract may access this
         _mint(account, amount);
     }
 
     function redeemForCash(address account) external returns(uint256) {
-        // Permissions are guarded by the _beforeTokenTransfer hook
+        // Permissions also guarded by _beforeTokenTransfer
+        // Both the admin and voucher smart contract may access this
         uint256 balance = balanceOf(account);
         _burn(account, balance);
         return balance;
@@ -39,7 +42,6 @@ contract GSGD is ERC20, ERC20Burnable, Ownable, AccessControl {
     // Hooks
     // =========================================================================
 
-    // Only the admin or owner (voucher contract) can make any transfers
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal override {
         require((hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || msg.sender == owner()), "Only the admin or the voucher smart contract may make any transfers");
         super._beforeTokenTransfer(from, to, amount);

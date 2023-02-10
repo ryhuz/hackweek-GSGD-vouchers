@@ -9,10 +9,16 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Voucher is ERC721Enumerable, Ownable {
 
-    struct VoucherMetadata{
+    struct VoucherMetadata {
+      uint256 value;    // Value represented in GSGD decimals
+      address merchantAddress; // Optional whitelisted merchant
+    }
+
+    struct VoucherInfo {
       uint256 tokenId;
-      uint256 value;    // Same decimal as GSGD
-      address merchant; // Optional
+      uint256 value;            // Value represented in GSGD decimals
+      address merchantAddress;  // Optional whitelisted merchant
+      string merchantName;
     }
 
     using Counters for Counters.Counter;
@@ -43,39 +49,24 @@ contract Voucher is ERC721Enumerable, Ownable {
       return address(merchantsListContract);
     }
 
-    // Value represented with GSGD decimal
+    // Value represented in GSGD decimals
     function getVoucherValue(uint256 tokenId) public view returns (uint256) {
       return _voucherMetadata[tokenId].value;
     }
 
-    function getVoucherMerchant(uint256 tokenId) public view returns (address) {
-      return _voucherMetadata[tokenId].merchant;
+    function getVoucherMerchantAddress(uint256 tokenId) public view returns (address) {
+      return _voucherMetadata[tokenId].merchantAddress;
     }
 
-    function getAllVouchersID() public view returns (uint256[] memory) {
-      uint256 voucherCount = 0;
+    function getAllVouchers() external view returns (VoucherInfo[] memory) {
       uint256 balance = balanceOf(msg.sender);
-      uint256[] memory ownedVouchers = new uint256[](balance);
+      VoucherInfo[] memory ownedVouchers = new VoucherInfo[](balance);
 
       for(uint256 i = 0; i < balance; i++) {
         uint256 tokenId = tokenOfOwnerByIndex(msg.sender, i);
-        ownedVouchers[voucherCount] = tokenId;
-        voucherCount++;
-      }
-      
-      return ownedVouchers;
-    }
-
-    function getAllVouchersMetadata() public view returns (VoucherMetadata[] memory) {
-      uint256 voucherCount = 0;
-      uint256 balance = balanceOf(msg.sender);
-      VoucherMetadata[] memory ownedVouchers = new VoucherMetadata[](balance);
-
-      for(uint256 i = 0; i < balance; i++) {
-        uint256 tokenId = tokenOfOwnerByIndex(msg.sender, i);
-        VoucherMetadata memory voucherMetadata = _voucherMetadata[tokenId];
-        ownedVouchers[voucherCount] = voucherMetadata;
-        voucherCount++;
+        VoucherMetadata memory merchantMetadata = _voucherMetadata[tokenId];
+        string memory merchantName = merchantsListContract.getMerchantName(merchantMetadata.merchantAddress);
+        ownedVouchers[i] = VoucherInfo(tokenId, merchantMetadata.value, merchantMetadata.merchantAddress, merchantName);
       }
       
       return ownedVouchers;
@@ -86,19 +77,23 @@ contract Voucher is ERC721Enumerable, Ownable {
     // ===========================================================================
 
     function mintVoucher(address account, uint256 value) external returns (uint256) {
+      // Only the contract owner may access this
       return _mintVoucher(account, value, address(0));
     }
     function mintVoucher(address account, uint256 value, address merchant) external returns (uint256) {
+      // Only the contract owner may access this
       return _mintVoucher(account, value, merchant);
     }
 
     function spendVoucher(uint256 tokenId) external  {
-      address voucherMerchant = getVoucherMerchant(tokenId);
-      require(voucherMerchant != address(0), "Must have a target merchant");
-      _spendVoucher(tokenId, voucherMerchant);
+      // Only the voucher owner may access this
+      address merchantAddress = getVoucherMerchantAddress(tokenId);
+      require(merchantAddress != address(0), "Must have a target merchant");
+      _spendVoucher(tokenId, merchantAddress);
     }
 
     function spendVoucher(uint256 tokenId, address merchant) external  {
+      // Only the voucher owner may access this
       _spendVoucher(tokenId, merchant);
     }
 
@@ -123,22 +118,24 @@ contract Voucher is ERC721Enumerable, Ownable {
     // Internal
     // =========================================================================
 
-    // Value represented with GSGD decimal
     function _mintVoucher(address account, uint256 value, address merchant) internal onlyOwner returns (uint256) {
       require(_tokenIds.current() < limit, "Voucher limit reached");
       _tokenIds.increment();
 
       uint256 newTokenId = _tokenIds.current();
       _mint(account, newTokenId);
-      _voucherMetadata[newTokenId] = VoucherMetadata(newTokenId, value, merchant);
+      _voucherMetadata[newTokenId] = VoucherMetadata(value, merchant);
 
       return newTokenId;
     }
 
     function _spendVoucher(uint256 tokenId, address merchant) internal  {
+      // Permissions also guarded by _beforeTokenTransfer
       require(msg.sender == ownerOf(tokenId), "Only the voucher owner may redeem it");
       require(merchantsListContract.hasOnboarded(merchant), "May only be spent with an onboarded merchant"); 
-      require(getVoucherMerchant(tokenId) == address(0) || merchant == getVoucherMerchant(tokenId), "May only be spent with an voucher specific merchant"); 
+
+      address whiteListedMerchant = getVoucherMerchantAddress(tokenId);
+      require(whiteListedMerchant == address(0) || merchant == whiteListedMerchant, "May only be spent with an voucher specific merchant"); 
 
       uint256 gsgdValue = getVoucherValue(tokenId);
       _burn(tokenId);

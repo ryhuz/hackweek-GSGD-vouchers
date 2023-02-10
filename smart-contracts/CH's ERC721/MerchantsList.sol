@@ -34,11 +34,13 @@ contract MerchantsList is Ownable, AccessControl {
     // =========================================================================
 
     function onboard(address merchantAddress, string calldata name) external {
+        // Both the admin and voucher smart contract may access this
         require((hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || msg.sender == owner()), "Only the admin or the voucher smart contract may make any changes");
         merchantMap[merchantAddress] = Merchant(name, true);
     }
 
     function offboard(address merchantAddress) external {
+        // Both the admin and voucher smart contract may access this
         require((hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || msg.sender == owner()), "Only the admin or the voucher smart contract may make any changes");
         merchantMap[merchantAddress] = Merchant(merchantMap[merchantAddress].name, false);
     }
