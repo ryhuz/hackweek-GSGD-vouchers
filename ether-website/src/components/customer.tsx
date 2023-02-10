@@ -1,7 +1,7 @@
-import { Card } from "@lifesg/react-design-system";
+import { Card, Form } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
 import { Masonry } from "@lifesg/react-design-system/masonry";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import styles from "../css/customer.module.css";
 import { merchantHelper } from "../ether/merchant";
 import { Voucher, voucherHelper } from "../ether/voucher";
@@ -15,6 +15,7 @@ export interface CustomerProfile {
 
 export const CustomerComponent = (): JSX.Element => {
   const [customer, setCustomer] = useState<CustomerProfile>(null);
+  const [merchantInput, setMerchantInput] = useState("");
   const vh = voucherHelper;
 
   useEffect(() => {
@@ -58,6 +59,10 @@ export const CustomerComponent = (): JSX.Element => {
     });
   }
 
+  function handleMerchantChange(evt: ChangeEvent<HTMLInputElement>) {
+    setMerchantInput(evt.target.value.trim());
+  }
+
   const renderVoucher = () => {
     return (
       <>
@@ -95,7 +100,7 @@ export const CustomerComponent = (): JSX.Element => {
         {customer.vouchers.map((voucher: Voucher, index: number) => {
           return (
             <>
-              <Masonry.Tile startSm={1} colsSm={2}>
+              <Masonry.Tile startSm={1} colsSm={2} style={{height: 300}}>
                 <div className={styles.DemoContainer}>
                   {voucher.merchantName ? voucher.merchantName : "Any Merchant"}
                   {` - $${voucher.value}`}
@@ -104,12 +109,18 @@ export const CustomerComponent = (): JSX.Element => {
                       handleSpendVoucher(
                         voucher.tokenId,
                         !voucher.merchantName &&
-                          "0x4aAED7cA70d287F2a475aB66D12bc5c0F10ceCBf"
+                          merchantInput
                       )
                     }
                   >
                     Spend Voucher
                   </Button.Default>
+                  {!voucher.merchantName && (
+                     <Form.Input
+                      placeholder="Merchant Address..."
+                      onChange={handleMerchantChange}
+                      />
+                  )}
                 </div>
               </Masonry.Tile>
             </>
